@@ -2,13 +2,16 @@
 CREATE TABLE IF NOT EXISTS Users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE, -- Added email field
     password TEXT NOT NULL,
-    role TEXT CHECK(role IN ('super admin', 'admin')) NOT NULL
+    role TEXT CHECK(role IN ('super_admin', 'admin', 'user')) NOT NULL
 );
 
--- Insert sample users
-INSERT INTO Users (username, password, role) VALUES ('admin1', 'password123', 'admin');
-INSERT INTO Users (username, password, role) VALUES ('superadmin1', 'password456', 'super admin');
+-- Insert sample users (PASSWORDS SHOULD BE HASHED IN THE APP, NOT HERE!)
+INSERT INTO Users (username, email, password, role) VALUES ('admin1', 'admin1@example.com', 'password123', 'admin');
+INSERT INTO Users (username, email, password, role) VALUES ('superadmin1', 'superadmin1@example.com', 'password456', 'super_admin');
+INSERT INTO Users (username, email, password, role) VALUES ('user1', 'user1@example.com', 'password789', 'user');
+INSERT INTO Users (username, email, password, role) VALUES ('user2', 'user2@example.com', 'password101', 'user');
 
 -- Create Categories table
 CREATE TABLE IF NOT EXISTS Categories (
@@ -22,6 +25,8 @@ CREATE TABLE IF NOT EXISTS Categories (
 -- Insert sample categories
 INSERT INTO Categories (name, type, user_id) VALUES ('Salary', 'income', 2);
 INSERT INTO Categories (name, type, user_id) VALUES ('Food', 'expense', 1);
+INSERT INTO Categories (name, type, user_id) VALUES ('Rent', 'expense', 3);
+INSERT INTO Categories (name, type, user_id) VALUES ('Freelance', 'income', 4);
 
 -- Create Incomes table
 CREATE TABLE IF NOT EXISTS Incomes (
@@ -44,6 +49,9 @@ CREATE TABLE IF NOT EXISTS Incomes (
 INSERT INTO Incomes (title, description, amount, currency, date, category_id, user_id, recurring, start_date, end_date)
 VALUES ('Monthly Salary', 'Regular monthly salary payment', 2500, 'USD', '2025-02-01', 1, 2, 1, '2025-02-01', '2025-12-31');
 
+INSERT INTO Incomes (title, description, amount, currency, date, category_id, user_id, recurring, start_date, end_date)
+VALUES ('Freelance Project', 'Payment for freelance work', 1200, 'USD', '2025-02-15', 4, 4, 0, NULL, NULL);
+
 -- Create Expenses table
 CREATE TABLE IF NOT EXISTS Expenses (
     expense_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +62,7 @@ CREATE TABLE IF NOT EXISTS Expenses (
     date TEXT NOT NULL,
     category_id INTEGER,
     user_id INTEGER,
-    recurring BOOLEAN,'
+    recurring BOOLEAN,
     start_date TEXT,
     end_date TEXT,
     FOREIGN KEY (category_id) REFERENCES Categories (category_id),
@@ -64,6 +72,9 @@ CREATE TABLE IF NOT EXISTS Expenses (
 -- Insert sample expenses
 INSERT INTO Expenses (title, description, amount, currency, date, category_id, user_id, recurring, start_date, end_date)
 VALUES ('Grocery Shopping', 'Monthly grocery shopping', 150, 'USD', '2025-02-10', 2, 1, 0, NULL, NULL);
+
+INSERT INTO Expenses (title, description, amount, currency, date, category_id, user_id, recurring, start_date, end_date)
+VALUES ('Rent Payment', 'Monthly rent payment', 800, 'USD', '2025-02-05', 3, 3, 1, '2025-02-05', '2025-12-05');
 
 -- Create Profit Goals table
 CREATE TABLE IF NOT EXISTS Profit_Goals (
@@ -78,3 +89,6 @@ CREATE TABLE IF NOT EXISTS Profit_Goals (
 -- Insert sample profit goals
 INSERT INTO Profit_Goals (target_amount, start_date, end_date, user_id)
 VALUES (10000, '2025-02-01', '2025-12-31', 2);
+
+INSERT INTO Profit_Goals (target_amount, start_date, end_date, user_id)
+VALUES (5000, '2025-02-01', '2025-12-31', 4);

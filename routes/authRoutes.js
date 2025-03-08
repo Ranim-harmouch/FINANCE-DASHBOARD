@@ -1,9 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const authController = require("../controllers/authController");
 
-// Dummy route for authentication (Replace with actual logic)
-router.get('/', (req, res) => {
-    res.send('Auth route is working!');
-});
+router.post("/register", authController.registerUser);
+router.post("/login", authController.loginUser);
 
 module.exports = router;

@@ -1,8 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const expenseController = require('../controllers/expenseController');
+const expenseController = require("../controllers/expenseController");
+const { authenticateUser } = require("../middleware/authMiddleware");
 
-router.post('/expenses', expenseController.createExpense);
+// Routes
+router.get("/", authenticateUser, expenseController.getAllExpenses);
+router.post("/", authenticateUser, expenseController.createExpense);
 
+// Export the router
 module.exports = router;
-
