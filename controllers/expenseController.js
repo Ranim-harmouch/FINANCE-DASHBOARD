@@ -10,6 +10,20 @@ exports.getAllExpenses = async (req, res) => {
   }
 };
 
+//get total expense
+exports.getTotalExpense = async (req, res) => {
+  try {
+    const expenses = await Expense.findAll();
+    const totalExpense = expenses.reduce(
+      (acc, expense) => acc + expense.amount,
+      0
+    );
+    res.status(200).json({ totalExpense });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Create a new expense
 exports.createExpense = async (req, res) => {
   try {

@@ -9,6 +9,16 @@ exports.getAllIncomes = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// get total incomes
+exports.getTotalIncome = async (req, res) => {
+  try {
+    const incomes = await Income.findAll();
+    const totalIncome = incomes.reduce((acc, income) => acc + income.amount, 0);
+    res.status(200).json({ totalIncome });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Create a new income
 exports.createIncome = async (req, res) => {

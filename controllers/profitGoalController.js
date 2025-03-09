@@ -10,6 +10,23 @@ exports.getAllProfitGoals = async (req, res) => {
   }
 };
 
+//get profit margin 
+exports.getProfit = async (req, res) => {
+  try {
+    const incomes = await Income.findAll();
+    const expenses = await Expense.findAll();
+    const totalIncome = incomes.reduce((acc, income) => acc + income.amount, 0);
+    const totalExpense = expenses.reduce(
+      (acc, expense) => acc + expense.amount,
+      0
+    );
+    const profit = totalIncome - totalExpense;
+    res.status(200).json({ profit });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Create a new profit goal
 exports.createProfitGoal = async (req, res) => {
   try {
